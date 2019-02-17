@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="Project1.View.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Project1.View"
+             xmlns:view="clr-namespace:Project1.View"
+             xmlns:viewModel="clr-namespace:Project1.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="470" d:DesignWidth="300">
+    <Grid>
+        <Label Content="Hello there!" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" FontSize="21"/>
+        <Label Content="Please log in" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Top" FontSize="15"/>
+        <Label Content="Username:" HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Top" FontSize="21"/>
+        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" HorizontalAlignment="Center" Margin="0,150,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="18" Width="200"/>
+        <Label Content="Password:" HorizontalAlignment="Center" Margin="0,190,0,0" VerticalAlignment="Top" FontSize="21"/>
+        <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" HorizontalAlignment="Center" Margin="0,240,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="18" Width="200"/>
+        <Button Command="{Binding LogInCommand}" Content="Log In" HorizontalAlignment="Center" Margin="0,290,0,0" VerticalAlignment="Top" FontSize="21" Width="200"/>
+        <Label Content="Don't have an account?" HorizontalAlignment="Center" Margin="0,330,0,0" VerticalAlignment="Top" FontSize="12"/>
+        <Button Command="{Binding RegisterCommand}" Content="Register" HorizontalAlignment="Center" Margin="0,360,0,0" VerticalAlignment="Top" FontSize="21" Width="200"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="Project1.View.AccountDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Project1.View"
+             xmlns:view="clr-namespace:Project1.View"
+             xmlns:viewModel="clr-namespace:Project1.ViewModel"
+             xmlns:core="clr-namespace:Project1.Core" 
+             core:ViewModelLocator.AutoHookedUpViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    <Grid>
+        <Label Content="New Username:" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" FontSize="21"/>
+        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" HorizontalAlignment="Center" Margin="0,70,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="18" Width="200"/>
+        <Label Content="New Password:" HorizontalAlignment="Center" Margin="0,110,0,0" VerticalAlignment="Top" FontSize="21"/>
+        <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" HorizontalAlignment="Center" Margin="0,160,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="18" Width="200"/>
+        <Button Command="{Binding ApplyChangesCommand}" Content="Apply Changes" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" FontSize="21" Width="200"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="Project1.View.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Project1.View"
+             xmlns:view="clr-namespace:Project1.View"
+             xmlns:viewModel="clr-namespace:Project1.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="470" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type viewModel:MyImagesViewModel}">
+            <view:MyImagesView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:AddImageViewModel}">
+            <view:AddImageView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:AccountDetailsViewModel}">
+            <view:AccountDetailsView/>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="My Images" Command="{Binding NavCommand}" CommandParameter="myImages" Grid.Column="0"/>
+            <Button Content="Add Image" Command="{Binding NavCommand}" CommandParameter="addImage" Grid.Column="1"/>
+            <Button Content="Account Details" Command="{Binding NavCommand}" CommandParameter="accountDetails" Grid.Column="2"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <ContentControl Content="{Binding CurrentViewModel}"/>
+        </Grid>
+    </Grid>
+</UserControl>
