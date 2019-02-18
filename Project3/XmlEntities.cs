@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -128,6 +129,15 @@ namespace Project3
         public Switches Switches { get; set; }
         [XmlElement(ElementName = "Lines")]
         public Lines Lines { get; set; }
+
+        public static NetworkModel GenerateFromXml(string filePath)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(NetworkModel));
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            {
+                return (NetworkModel)serializer.Deserialize(fileStream);
+            }
+        }
     }
 }
 
