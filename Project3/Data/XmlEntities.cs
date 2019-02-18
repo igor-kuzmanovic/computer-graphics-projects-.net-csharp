@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Project3
+namespace Project3.Data
 {
     [XmlRoot(ElementName = "SubstationEntity")]
     public class SubstationEntity

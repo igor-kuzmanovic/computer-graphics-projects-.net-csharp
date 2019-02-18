@@ -34,8 +34,18 @@ namespace Project3
 
         void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            NetworkModel networkModel = NetworkModel.GenerateFromXml(filePath);
-            network = new Network(networkModel);
+            network = new Network(filePath);
+
+            network.Points.ForEach(p =>
+            {
+                Rectangle rectangle = new Rectangle();
+                rectangle.Fill = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                rectangle.Height = 1;
+                rectangle.Width = 1;
+                rectangle.SetValue(Canvas.LeftProperty, p.X);
+                rectangle.SetValue(Canvas.BottomProperty, p.Y);
+                NetworkGrid.Children.Add(rectangle);
+            });
         }
     }
 }

@@ -6,16 +6,18 @@
         xmlns:local="clr-namespace:Project3"
         mc:Ignorable="d"
         Title="MainWindow" 
-        MinHeight="450" 
-        MinWidth="800"
+        Height="535"
+        Width="540"
         WindowStartupLocation="CenterScreen"
-        Loaded="Window_Loaded">
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded"
+>
     <Grid Margin="10,10,10,10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <Canvas x:Name="NetworkGrid"
+                Height="Auto"
+                Width="Auto"
+        >
+
+        </Canvas>
     </Grid>
 </Window>
