@@ -13,7 +13,9 @@ namespace Project3
     {
         Substation,
         Node,
-        Switch
+        Switch,
+        Breakpoint,
+        Intersection
     }
 
     public class GridPoint
@@ -28,14 +30,11 @@ namespace Project3
     public class GridLine
     {
         public long Id { get; set; }
-        public double StartX { get; set; }
-        public double StartY { get; set; }
-        public double EndX { get; set; }
-        public double EndY { get; set; }
+        public List<GridPoint> Points { get; set; } = new List<GridPoint>();
         public double Distance {
             get
             {
-                return Math.Sqrt(Math.Pow(StartX - EndX, 2) + Math.Pow(StartY - EndY, 2));
+                return Math.Sqrt(Math.Pow(Points.First().X - Points.Last().X, 2) + Math.Pow(Points.First().Y - Points.Last().Y, 2));
             }
         }
     }
@@ -53,15 +52,25 @@ namespace Project3
         public Network(string filePath) : this()
         {
             NetworkModel networkModel = LoadNetworkModelFromXml(filePath);
+
             LoadSubstations(networkModel.Substations);
             LoadNodes(networkModel.Nodes);
             LoadSwitches(networkModel.Switches);
             LoadLines(networkModel.Lines);
             CompressCoordinates();
+
+            Trace.WriteLine($"Points: {Points.Count}");
+            Trace.WriteLine($"Lines: {Lines.Count}");
+            Trace.WriteLine($"" +
+                $"MinX: {Points.Min(p => p.X)}\n" +
+                $"MinY: {Points.Min(p => p.Y)}\n" +
+                $"MaxX: {Points.Max(p => p.X)}\n" +
+                $"MaxY: {Points.Max(p => p.Y)}");
         }
 
         public List<GridPoint> Points { get; set; }
         public List<GridLine> Lines { get; set; }
+        public bool[,] Pixels { get; set; }
 
         private NetworkModel LoadNetworkModelFromXml(string filePath)
         {
@@ -125,27 +134,42 @@ namespace Project3
             {
                 if (Points.Any(p => p.Id == e.FirstEnd) && Points.Any(p => p.Id == e.SecondEnd))
                 {
-                    GridPoint startPoint = Points.Single(p => p.Id == e.FirstEnd);
-                    GridPoint endPoint = Points.Single(p => p.Id == e.SecondEnd);
+                    GridPoint first = Points.Single(p => p.Id == e.FirstEnd);
+                    GridPoint last = Points.Single(p => p.Id == e.SecondEnd);
 
-                    GridLine line = new GridLine()
+                    if (!Lines.Any(l => (l.Points.First() == first && l.Points.Last() == last) || (l.Points.First() == last && l.Points.Last() == first)))
                     {
-                        Id = e.Id,
-                        StartX = startPoint.X,
-                        StartY = startPoint.Y,
-                        EndX = endPoint.X,
-                        EndY = endPoint.Y
-                    };
+                        GridPoint breakPoint = new GridPoint() { X = last.X, Y = first.Y, Type = GridPointType.Intersection };
+                        Points.Add(breakPoint);
 
-                    Lines.Add(line);
+                        GridLine lineStart = new GridLine()
+                        {
+                            Id = e.Id,
+                        };
+
+                        lineStart.Points.Add(first);
+                        lineStart.Points.Add(breakPoint);
+
+                        Lines.Add(lineStart);
+
+                        GridLine lineEnd = new GridLine()
+                        {
+                            Id = e.Id,
+                        };
+
+                        lineEnd.Points.Add(breakPoint);
+                        lineEnd.Points.Add(last);
+
+                        Lines.Add(lineEnd);
+                    }
                 }
             });
         }
 
         private void CompressCoordinates()
         {
-            double scaleX = 1.0 / 35;
-            double scaleY = 1.0 / 35;
+            double scaleX = 1.0 / 9.5;
+            double scaleY = 1.0 / 16.9;
 
             Points.ForEach(p =>
             {
@@ -173,8 +197,8 @@ namespace Project3
                     {
                         bool hasFoundFree = false;
 
-                        offsetStart--;
-                        offsetEnd++;
+                        offsetStart -= 4;
+                        offsetEnd += 4;
 
                         for (int i = offsetStart; !hasFoundFree && i <= offsetEnd; i++)
                         {
@@ -195,16 +219,7 @@ namespace Project3
 
                     usedPoints.Add(Tuple.Create(p.X, p.Y));
                 });
-
-                Trace.WriteLine($"" +
-                    $"MinX = {Points.Min(p => p.X)}\n" +
-                    $"MinY = {Points.Min(p => p.Y)}\n" +
-                    $"MaxX = {Points.Max(p => p.X)}\n" +
-                    $"MaxY = {Points.Max(p => p.Y)}");
-
-                Trace.WriteLine("Number of points " + Points.Count.ToString());
-                Trace.WriteLine("Number of used points " + usedPoints.Count.ToString());
-            } while (Points.Any(p => p.X < 0 || p.Y < 0));          
+            } while (Points.Any(p => p.X < 0 || p.Y < 0));
         }
     }
 }

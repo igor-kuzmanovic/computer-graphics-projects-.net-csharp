@@ -10,14 +10,19 @@
         Width="540"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
+        WindowState="Maximized"
         Loaded="Window_Loaded"
 >
     <Grid Margin="10,10,10,10">
         <Canvas x:Name="NetworkGrid"
                 Height="Auto"
                 Width="Auto"
+                RenderTransformOrigin="0.5 0.5"
         >
 
+            <Canvas.RenderTransform>
+                <ScaleTransform ScaleY="-1" />
+            </Canvas.RenderTransform>
         </Canvas>
     </Grid>
 </Window>

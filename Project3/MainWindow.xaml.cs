@@ -35,16 +35,58 @@ namespace Project3
         void Window_Loaded(object sender, RoutedEventArgs e)
         {
             network = new Network(filePath);
+            LoadPoints();
+            LoadLines();
+        }
 
+        private void LoadPoints()
+        {
             network.Points.ForEach(p =>
             {
                 Rectangle rectangle = new Rectangle();
-                rectangle.Fill = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                rectangle.Height = 1;
-                rectangle.Width = 1;
+                rectangle.Height = 4;
+                rectangle.Width = 4;
                 rectangle.SetValue(Canvas.LeftProperty, p.X);
-                rectangle.SetValue(Canvas.BottomProperty, p.Y);
+                rectangle.SetValue(Canvas.TopProperty, p.Y);
+
+                ToolTip toolTip = new ToolTip();
+                toolTip.Content = p.Name;
+                rectangle.ToolTip = toolTip;
+
+                switch (p.Type)
+                {
+                    case GridPointType.Substation:
+                        rectangle.Fill = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                        break;
+                    case GridPointType.Node:
+                        rectangle.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 0));
+                        break;
+                    case GridPointType.Switch:
+                        rectangle.Fill = new SolidColorBrush(Color.FromRgb(0, 0, 255));
+                        break;
+                }
+
                 NetworkGrid.Children.Add(rectangle);
+            });
+        }
+
+        private void LoadLines()
+        {
+            network.Lines.ForEach(l =>
+            {
+                l.Points.ForEach(p => Trace.Write($"{p.X} {p.Y}"));
+                Trace.WriteLine("");
+
+                Line line = new Line();
+                line.X1 = l.Points.First().X;
+                line.Y1 = l.Points.First().Y;
+                line.X2 = l.Points.Last().X;
+                line.Y2 = l.Points.Last().Y;
+
+                line.Stroke = new SolidColorBrush(Color.FromRgb(127, 127, 127));
+                line.StrokeThickness = 2;
+
+                NetworkGrid.Children.Add(line);
             });
         }
     }
