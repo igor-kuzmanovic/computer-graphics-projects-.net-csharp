@@ -308,22 +308,22 @@ namespace Project4
 
             latitude = ((lat + (1 + e2cuadrada * Math.Pow(Math.Cos(lat), 2) - (3.0 / 2.0) * e2cuadrada * Math.Sin(lat) * Math.Cos(lat) * (tao - lat)) * (tao - lat)) * (180.0 / Math.PI)) + diflat;
 
-            if (latitude <= Config.minLatitude || latitude >= Config.maxLatitude)
+            if (latitude < Config.minLatitude || latitude > Config.maxLatitude)
                 latitude = double.NaN;
 
             longitude = ((delt * (180.0 / Math.PI)) + s) + diflon;
 
-            if (longitude <= Config.minLongitude || longitude >= Config.maxLongitude)
+            if (longitude < Config.minLongitude || longitude > Config.maxLongitude)
                 longitude = double.NaN;
         }
 
         private void LatitudeLongitudeToPixels(double latitude, double longitude, out double x, out double y)
         {
-            double xMultiplier = Config.mapWidth / (Config.maxLongitude - Config.minLongitude);
-            double yMultiplier = Config.mapHeight / (Config.maxLatitude - Config.minLatitude);
+            double xMultiplier = Config.mapImageWidth / (Config.maxLongitude - Config.minLongitude);
+            double yMultiplier = Config.mapImageHeight / (Config.maxLatitude - Config.minLatitude);
 
-            x = Math.Round((longitude - Config.minLongitude) * xMultiplier, 0);
-            y = Math.Round((latitude - Config.minLatitude) * yMultiplier, 0);
+            x = (longitude - Config.minLongitude) * xMultiplier;
+            y = (latitude - Config.minLatitude) * yMultiplier;
         }
     }
 }

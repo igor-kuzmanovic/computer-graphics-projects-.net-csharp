@@ -7,30 +7,61 @@
     xmlns:local="clr-namespace:Project4"
     mc:Ignorable="d"
     Title="Project 4"
-    WindowStartupLocation="CenterScreen"
-    MinHeight="320" 
-    MinWidth="480"
-    Height="480" 
-    Width="640"
+    MinHeight="258" 
+    MinWidth="392"
+    Height="775" 
+    Width="1175"
+    MaxHeight="930" 
+    MaxWidth="1410"
     Background="Beige"
+    WindowStartupLocation="CenterScreen"
     Loaded="Window_Loaded"
 >
-    <ScrollViewer 
-        CanContentScroll="True"
-        VerticalScrollBarVisibility="Auto"
-        HorizontalScrollBarVisibility="Auto"
+    <Viewport3D Name="Viewport"
+                ClipToBounds="True" 
     >
-        <Canvas 
-            x:Name="NetworkGrid"
-            Height="775"
-            Width="1175"
-            Margin="10,10,10,10"
-            RenderTransformOrigin="0.5 0.5"
-        >
-
-            <Canvas.RenderTransform>
-                <ScaleTransform ScaleY="-1" />
-            </Canvas.RenderTransform>
-        </Canvas>
-    </ScrollViewer>
+        <Viewport3D.Camera>
+            <PerspectiveCamera Position="587.5,387.5,1500" 
+                               LookDirection="0,0,-1" />
+        </Viewport3D.Camera>
+        <Viewport3D.Children>
+            <ModelVisual3D>
+                <ModelVisual3D.Content>
+                    <AmbientLight />
+                </ModelVisual3D.Content>
+            </ModelVisual3D>
+            <ModelVisual3D>
+                <ModelVisual3D.Content>
+                    <Model3DGroup x:Name="Map">
+                        <GeometryModel3D>
+                            <GeometryModel3D.Material>
+                                <DiffuseMaterial>
+                                    <DiffuseMaterial.Brush>
+                                        <ImageBrush ImageSource="novi_sad_map.jpg" />
+                                    </DiffuseMaterial.Brush>
+                                </DiffuseMaterial>
+                            </GeometryModel3D.Material>
+                            <GeometryModel3D.Geometry>
+                                <MeshGeometry3D Positions="0,0,0 1175,0,0 1175,775,0 0,775,0"
+                                                TextureCoordinates="0,1 1,1 1,0 0,0"
+                                                TriangleIndices="0 1 2 0 2 3" />
+                            </GeometryModel3D.Geometry>
+                            <GeometryModel3D.Transform>
+                                <Transform3DGroup>
+                                    <TranslateTransform3D x:Name="Translation" 
+                                                          OffsetX="0" 
+                                                          OffsetY="0" 
+                                                          OffsetZ="0" />
+                                    <ScaleTransform3D x:Name="Scaling"
+                                                      ScaleX="1" 
+                                                      ScaleY="1" 
+                                                      ScaleZ="1" />
+                                </Transform3DGroup>
+                            </GeometryModel3D.Transform>
+                        </GeometryModel3D>
+                    </Model3DGroup>
+                </ModelVisual3D.Content>
+            </ModelVisual3D>
+        </Viewport3D.Children>
+    </Viewport3D>
 </Window>

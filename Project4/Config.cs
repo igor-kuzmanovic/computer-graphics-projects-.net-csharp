@@ -14,13 +14,13 @@ namespace Project4
 
         public static readonly int zoneUTM = 34;
 
-        public static readonly double minLatitude = 45.2425;
+        public static readonly double minLatitude = 45.2325;
         public static readonly double maxLatitude = 45.277031;
         public static readonly double minLongitude = 19.793909;
         public static readonly double maxLongitude = 19.894459;
 
-        public static readonly string mapPath = @"../../novi_sad_map.jpg";
-        public static readonly double mapHeight = 775;
-        public static readonly double mapWidth = 1175;
+        public static readonly string mapImagePath = @"../../novi_sad_map.jpg";
+        public static readonly double mapImageHeight = 775;
+        public static readonly double mapImageWidth = 1175;
     }
 }

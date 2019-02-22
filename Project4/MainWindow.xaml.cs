@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -33,59 +34,130 @@ namespace Project4
             dataHelper.ExportNetworkModelGeoToXml(networkModelGeo);
             MapNetworkModel mapNetworkModel = dataHelper.ConvertNetworkModelGeoToMap(networkModelGeo);
             dataHelper.ExportMapNetworkModelToXml(mapNetworkModel);
-            Generate2DMap(mapNetworkModel);
+            Draw3DLines(mapNetworkModel);
+            Draw3DPoints(mapNetworkModel);
         }
 
-        private void Generate2DMap(MapNetworkModel mapNetworkModel)
+        private void Draw3DPoints(MapNetworkModel mapNetworkModel)
         {
-            mapNetworkModel.Lines.ForEach(l =>
+            mapNetworkModel.Points.ForEach(point =>
             {
-                for (int i = 0; i < l.Points.Count - 1; i++)
+                int side = 6;
+                int height = 0;
+                if (point.Type == PointType.Connector)
                 {
-                    Line line = new Line();
-                    line.X1 = l.Points[i].X;
-                    line.Y1 = l.Points[i].Y;
-                    line.X2 = l.Points[i + 1].X;
-                    line.Y2 = l.Points[i + 1].Y;
-
-                    line.Stroke = new SolidColorBrush(Color.FromRgb(0, 72, 186));
-                    line.Stroke.Opacity = 0.5;
-                    line.StrokeThickness = 2;
-
-                    NetworkGrid.Children.Add(line);
-                }
-            });
-
-            mapNetworkModel.Points.ForEach(p =>
-            {
-                Ellipse ellipse = new Ellipse();
-                ellipse.Height = 5;
-                ellipse.Width = 5;
-                ellipse.SetValue(Canvas.LeftProperty, p.X - 2);
-                ellipse.SetValue(Canvas.TopProperty, p.Y - 2);
-
-                ToolTip toolTip = new ToolTip();
-                toolTip.Content = p.Description;
-                ellipse.ToolTip = toolTip;
-
-                switch (p.Connectivity)
-                {
-                    case Connectivity.Low:
-                        ellipse.Fill = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                        ellipse.Opacity = 1.0 / 3.0;
-                        break;
-                    case Connectivity.Medium:
-                        ellipse.Fill = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                        ellipse.Opacity = 2.0 / 3.0;
-                        break;
-                    case Connectivity.High:
-                        ellipse.Fill = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                        ellipse.Opacity = 1;
-                        break;
+                    side = 2;
+                    height = 2;
                 }
 
-                NetworkGrid.Children.Add(ellipse);
+                GeometryModel3D model = new GeometryModel3D();
+                model.Geometry = new MeshGeometry3D()
+                {
+                    Positions = new Point3DCollection()
+                    {
+                        new Point3D(point.X + side, point.Y + side, height + side),
+                        new Point3D(point.X, point.Y + side, height + side),
+                        new Point3D(point.X, point.Y, height + side),
+                        new Point3D(point.X + side, point.Y, height + side),
+                        new Point3D(point.X + side, point.Y + side, height),
+                        new Point3D(point.X, point.Y + side, height),
+                        new Point3D(point.X, point.Y, height),
+                        new Point3D(point.X + side, point.Y, height),
+                    },
+                    TriangleIndices = new Int32Collection()
+                    {
+                        0,1,2,
+                        0,2,3,
+                        4,7,6,
+                        4,6,5,
+                        4,0,3,
+                        4,3,7,
+                        1,5,6,
+                        1,6,2,
+                        1,0,4,
+                        1,4,5,
+                        2,6,7,
+                        2,7,3
+                    }
+                };
+                model.Material = new DiffuseMaterial()
+                {
+                    Brush = new SolidColorBrush()
+                    {
+                        Color = GetColorFromConnectivity(point.Connectivity)
+                    }
+                };
+                Map.Children.Add(model);
+            });          
+        }
+
+        private void Draw3DLines(MapNetworkModel mapNetworkModel)
+        {
+            int side = 2;
+            int height = 2;
+
+            mapNetworkModel.Lines.ForEach(line =>
+            {
+                for (int i = 0; i < line.Points.Count - 1; i++)
+                {
+                    MapPoint startPoint = line.Points[i];
+                    MapPoint endPoint = line.Points[i + 1];
+                    GeometryModel3D model = new GeometryModel3D();
+                    model.Geometry = new MeshGeometry3D()
+                    {
+                        Positions = new Point3DCollection()
+                        {
+                            new Point3D(startPoint.X + side, startPoint.Y + side, height + side),
+                            new Point3D(startPoint.X, startPoint.Y + side, height + side),
+                            new Point3D(endPoint.X, endPoint.Y, height + side),
+                            new Point3D(endPoint.X + side, endPoint.Y, height + side),
+                            new Point3D(startPoint.X + side, startPoint.Y + side, height),
+                            new Point3D(startPoint.X, startPoint.Y + side, height),
+                            new Point3D(endPoint.X, endPoint.Y, height),
+                            new Point3D(endPoint.X + side, endPoint.Y, height),
+                        },
+                        TriangleIndices = new Int32Collection()
+                        {
+                            0,1,2,
+                            0,2,3,
+                            4,7,6,
+                            4,6,5,
+                            4,0,3,
+                            4,3,7,
+                            1,5,6,
+                            1,6,2,
+                            1,0,4,
+                            1,4,5,
+                            2,6,7,
+                            2,7,3
+                        }
+                    };
+                    model.Material = new DiffuseMaterial()
+                    {
+                        Brush = new SolidColorBrush()
+                        {
+                            Color = Color.FromRgb(0, 127, 255)
+                        }
+                    };
+                    Map.Children.Add(model);
+                }
             });
+        }
+
+        private Color GetColorFromConnectivity(Connectivity connectivity)
+        {
+            switch (connectivity)
+            {
+                case Connectivity.High:
+                    return Color.FromRgb(127, 0, 0);
+                case Connectivity.Medium:
+                    return Color.FromRgb(255, 0, 0);
+                case Connectivity.Low:
+                    return Color.FromRgb(255, 127, 127);
+                case Connectivity.None:
+                default:
+                    return Color.FromRgb(0, 127, 255);
+            }
         }
     }
 }
